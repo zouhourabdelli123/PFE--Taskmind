@@ -40,24 +40,24 @@ const CHART_DATA = [
 ];
 
 const TEAM = [
-    { name: 'Alexandra Deff', role: 'Github Repository Setup', status: 'Completed', img: 10 },
-    { name: 'Edwin Adenike', role: 'User Authentication Flow', status: 'In Progress', img: 11 },
-    { name: 'Isaac Oluwatemilorun', role: 'Search & Filter Feature', status: 'Pending', img: 12 },
-    { name: 'David Oshodi', role: 'Responsive Homepage Layout', status: 'In Progress', img: 13 },
+    { name: 'Alexandra Deff', role: 'Configuration du dépôt Github', status: 'Terminé', img: 10 },
+    { name: 'Edwin Adenike', role: 'Flux d’authentification utilisateur', status: 'En cours', img: 11 },
+    { name: 'Isaac Oluwatemilorun', role: 'Fonctionnalité Recherche & Filtre', status: 'En attente', img: 12 },
+    { name: 'David Oshodi', role: 'Mise en page Accueil Responsive', status: 'En cours', img: 13 },
 ];
 
 const PROJECTS = [
-    { title: 'API Endpoints Development', date: 'Nov 26', progress: 80, color: '#6366f1', icon: '⚡' },
-    { title: 'User Onboarding Flow', date: 'Nov 28', progress: 55, color: '#f59e0b', icon: '🌊' },
-    { title: 'Analytics Dashboard', date: 'Nov 30', progress: 65, color: '#16a34a', icon: '📊' },
-    { title: 'Performance Optimization', date: 'Dec 5', progress: 30, color: '#ef4444', icon: '🚀' },
-    { title: 'Cross-Browser Testing', date: 'Dec 6', progress: 15, color: '#8b5cf6', icon: '🧪' },
+    { title: 'Développement des points d’API', date: '26 Nov', progress: 80, color: '#6366f1', icon: '⚡' },
+    { title: 'Onboarding Utilisateur', date: '28 Nov', progress: 55, color: '#f59e0b', icon: '🌊' },
+    { title: 'Tableau de bord Analytique', date: '30 Nov', progress: 65, color: '#16a34a', icon: '📊' },
+    { title: 'Optimisation des performances', date: '5 Déc', progress: 30, color: '#ef4444', icon: '🚀' },
+    { title: 'Tests multi-navigateurs', date: '6 Déc', progress: 15, color: '#8b5cf6', icon: '🧪' },
 ];
 
 const STATUS_CONFIG = {
-    Completed: { bg: alpha('#10b981', 0.1), color: '#059669', icon: <CheckCircleOutlineRounded sx={{ fontSize: 14 }} /> },
-    'In Progress': { bg: alpha('#f59e0b', 0.1), color: '#d97706', icon: <PlayCircleOutlineRounded sx={{ fontSize: 14 }} /> },
-    Pending: { bg: alpha('#ef4444', 0.1), color: '#dc2626', icon: <PendingActionsRounded sx={{ fontSize: 14 }} /> },
+    'Terminé': { bg: alpha('#10b981', 0.1), color: '#059669', icon: <CheckCircleOutlineRounded sx={{ fontSize: 14 }} /> },
+    'En cours': { bg: alpha('#f59e0b', 0.1), color: '#d97706', icon: <PlayCircleOutlineRounded sx={{ fontSize: 14 }} /> },
+    'En attente': { bg: alpha('#ef4444', 0.1), color: '#dc2626', icon: <PendingActionsRounded sx={{ fontSize: 14 }} /> },
 };
 
 // ----- Sub-components -----
@@ -180,9 +180,9 @@ export function DashboardPage() {
             {/* Header */}
             <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ sm: 'center' }} gap={2}>
                 <Box>
-                    <Typography variant="h4" color="text.primary">Good morning 👋</Typography>
+                    <Typography variant="h4" color="text.primary">Bonjour 👋</Typography>
                     <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
-                        Here's what's happening with your projects today.
+                        Voici ce qui se passe avec vos projets aujourd'hui.
                     </Typography>
                 </Box>
                 <Stack direction="row" spacing={1.5}>
@@ -190,10 +190,10 @@ export function DashboardPage() {
                         variant="outlined"
                         sx={{ bgcolor: 'background.paper', borderColor: 'divider', color: 'text.primary', fontWeight: 600 }}
                     >
-                        Import Data
+                        Importer des données
                     </Button>
                     <Button variant="contained" startIcon={<AddRounded />}>
-                        New Project
+                        Nouveau projet
                     </Button>
                 </Stack>
             </Stack>
@@ -202,9 +202,9 @@ export function DashboardPage() {
             <Grid container spacing={2.5}>
                 <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <StatCard
-                        title="Total Projects"
+                        title="Total Projets"
                         value="24"
-                        diff="+5 this month"
+                        diff="+5 ce mois"
                         icon={<TrendingUpRounded />}
                         accent="#16a34a"
                         dark
@@ -212,28 +212,28 @@ export function DashboardPage() {
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <StatCard
-                        title="Completed"
+                        title="Terminés"
                         value="10"
-                        diff="+6 this week"
+                        diff="+6 cette semaine"
                         icon={<CheckCircleOutlineRounded />}
                         accent="#10b981"
                     />
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <StatCard
-                        title="In Progress"
+                        title="En cours"
                         value="12"
-                        diff="+2 today"
+                        diff="+2 aujourd'hui"
                         icon={<PlayCircleOutlineRounded />}
                         accent="#6366f1"
                     />
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <StatCard
-                        title="Pending"
+                        title="En attente"
                         value="2"
-                        diff="No change"
-                        subtitle="On discussion"
+                        diff="Aucun changement"
+                        subtitle="En discussion"
                         icon={<PendingActionsRounded />}
                         accent="#f59e0b"
                     />
@@ -252,11 +252,11 @@ export function DashboardPage() {
                                 <Paper sx={{ p: 3, height: '100%' }}>
                                     <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2.5 }}>
                                         <Box>
-                                            <Typography variant="h6" color="text.primary">Task Analytics</Typography>
-                                            <Typography variant="caption" color="text.secondary">Tasks completed per day</Typography>
+                                            <Typography variant="h6" color="text.primary">Analytique des tâches</Typography>
+                                            <Typography variant="caption" color="text.secondary">Tâches terminées par jour</Typography>
                                         </Box>
                                         <Stack direction="row" spacing={1}>
-                                            {['Week', 'Month'].map((label, i) => (
+                                            {['Semaine', 'Mois'].map((label, i) => (
                                                 <Box
                                                     key={label}
                                                     sx={{
@@ -287,17 +287,17 @@ export function DashboardPage() {
                                 >
                                     <Stack direction="row" justifyContent="space-between" alignItems="flex-start" sx={{ mb: 2 }}>
                                         <Chip
-                                            label="Upcoming"
+                                            label="À venir"
                                             size="small"
                                             sx={{ bgcolor: alpha(theme.palette.warning.main, 0.2), color: theme.palette.warning.light, fontWeight: 700, fontSize: '0.7rem' }}
                                         />
-                                        <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.4)' }}>Today 2:00 PM</Typography>
+                                        <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.4)' }}>Aujourd'hui 14h00</Typography>
                                     </Stack>
                                     <Typography variant="h6" sx={{ color: 'white', mb: 0.75 }}>
-                                        Meeting with Arc Company
+                                        Réunion avec l'entreprise Arc
                                     </Typography>
                                     <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.5)', mb: 'auto' }}>
-                                        Q3 Review & Product Roadmap planning session.
+                                        Revue T3 &amp; session de planification de la feuille de route produit.
                                     </Typography>
                                     <AvatarGroup max={3} sx={{ my: 2, '& .MuiAvatar-root': { width: 28, height: 28, fontSize: '0.7rem', borderColor: '#1e293b' } }}>
                                         {[10, 11, 12, 13].map(n => <Avatar key={n} src={`https://i.pravatar.cc/60?img=${n}`} />)}
@@ -312,7 +312,7 @@ export function DashboardPage() {
                                             borderRadius: 2.5,
                                         }}
                                     >
-                                        Join Meeting
+                                        Rejoindre la réunion
                                     </Button>
                                 </Paper>
                             </Grid>
@@ -322,11 +322,11 @@ export function DashboardPage() {
                         <Paper sx={{ p: 3 }}>
                             <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2.5 }}>
                                 <Box>
-                                    <Typography variant="h6" color="text.primary">Team Collaboration</Typography>
-                                    <Typography variant="caption" color="text.secondary">4 members active</Typography>
+                                    <Typography variant="h6" color="text.primary">Collaboration d'équipe</Typography>
+                                    <Typography variant="caption" color="text.secondary">4 membres actifs</Typography>
                                 </Box>
                                 <Button size="small" variant="outlined" startIcon={<AddRounded />} sx={{ borderRadius: 2.5 }}>
-                                    Add Member
+                                    Ajouter un membre
                                 </Button>
                             </Stack>
                             <Stack spacing={1.5}>
@@ -368,7 +368,7 @@ export function DashboardPage() {
                     <Stack spacing={2.5}>
                         {/* Progress ring */}
                         <Paper sx={{ p: 3, textAlign: 'center' }}>
-                            <Typography variant="h6" color="text.primary" sx={{ mb: 2, textAlign: 'left' }}>Overall Progress</Typography>
+                            <Typography variant="h6" color="text.primary" sx={{ mb: 2, textAlign: 'left' }}>Progression globale</Typography>
                             <Box sx={{ position: 'relative', width: 160, height: 100, mx: 'auto' }}>
                                 <svg viewBox="0 0 100 58" style={{ width: '100%', height: '100%', overflow: 'visible' }}>
                                     {/* Track */}
@@ -380,18 +380,18 @@ export function DashboardPage() {
                                 </svg>
                                 <Box sx={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
                                     <Typography variant="h4" fontWeight={800} color="text.primary">58%</Typography>
-                                    <Typography variant="caption" color="text.secondary">Completed</Typography>
+                                    <Typography variant="caption" color="text.secondary">Terminé</Typography>
                                 </Box>
                             </Box>
                             <Divider sx={{ my: 2 }} />
                             <Stack spacing={1.5}>
                                 {[
-                                    { label: 'Completed', value: 58, color: theme.palette.primary.main },
-                                    { label: 'In Progress', value: 33, color: theme.palette.secondary.main },
-                                    { label: 'Pending', value: 9, color: '#e2e8f0' },
+                                    { label: 'Terminé', value: 58, color: theme.palette.primary.main },
+                                    { label: 'En cours', value: 33, color: theme.palette.secondary.main },
+                                    { label: 'En attente', value: 9, color: '#e2e8f0' },
                                 ].map(item => (
                                     <Stack key={item.label} direction="row" alignItems="center" spacing={1.5}>
-                                        <Box sx={{ width: 10, height: 10, borderRadius: '50%', bgcolor: item.color, flexShrink: 0, border: item.label === 'Pending' ? '1px solid #cbd5e1' : 'none' }} />
+                                        <Box sx={{ width: 10, height: 10, borderRadius: '50%', bgcolor: item.color, flexShrink: 0, border: item.label === 'En attente' ? '1px solid #cbd5e1' : 'none' }} />
                                         <Typography variant="body2" color="text.secondary" sx={{ flex: 1 }}>{item.label}</Typography>
                                         <Typography variant="subtitle2" color="text.primary">{item.value}%</Typography>
                                     </Stack>
@@ -402,8 +402,8 @@ export function DashboardPage() {
                         {/* Project list */}
                         <Paper sx={{ overflow: 'hidden' }}>
                             <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ px: 2.5, pt: 2.5, pb: 1.5 }}>
-                                <Typography variant="h6" color="text.primary">Projects</Typography>
-                                <Button size="small" variant="outlined" sx={{ borderRadius: 2.5 }} startIcon={<AddRounded />}>New</Button>
+                                <Typography variant="h6" color="text.primary">Projets</Typography>
+                                <Button size="small" variant="outlined" sx={{ borderRadius: 2.5 }} startIcon={<AddRounded />}>Nouveau</Button>
                             </Stack>
                             <Stack>
                                 {PROJECTS.map((p, i) => (
@@ -461,7 +461,7 @@ export function DashboardPage() {
                             <Box sx={{ position: 'absolute', bottom: -30, right: -30, width: 120, height: 120, borderRadius: '50%', bgcolor: alpha(theme.palette.primary.main, 0.12) }} />
                             <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2.5, position: 'relative', zIndex: 1 }}>
                                 <Typography variant="body2" fontWeight={700} sx={{ color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.08em', fontSize: '0.7rem' }}>
-                                    Time Tracker
+                                    Suivi du temps
                                 </Typography>
                                 <Chip
                                     label="● Live"
@@ -476,7 +476,7 @@ export function DashboardPage() {
                                 01:24:08
                             </Typography>
                             <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.35)', display: 'block', mb: 3, position: 'relative', zIndex: 1 }}>
-                                Design — API Integration
+                                Design — Intégration API
                             </Typography>
                             <Stack direction="row" spacing={1.5} sx={{ position: 'relative', zIndex: 1 }}>
                                 <IconButton

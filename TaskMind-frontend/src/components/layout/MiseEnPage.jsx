@@ -36,20 +36,20 @@ import {
 import { useState } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { logoutApi } from '../../api/auth.api';
-import { useAuth } from '../../features/auth/AuthContext';
+import { useAuth } from '../../features/auth/AuthContexte';
 
 const DRAWER_WIDTH = 268;
 
 const NAV_ITEMS = [
-  { label: 'Dashboard', to: '/dashboard', icon: <DashboardRounded fontSize="small" /> },
-  { label: 'Tasks', to: '/tasks', icon: <AssignmentRounded fontSize="small" />, badge: 5 },
-  { label: 'Projects', to: '/projects', icon: <FolderOpenRounded fontSize="small" /> },
-  { label: 'Team', to: '/teams', icon: <Groups2Rounded fontSize="small" /> },
+  { label: 'Tableau de bord', to: '/dashboard', icon: <DashboardRounded fontSize="small" /> },
+  { label: 'Tâches', to: '/tasks', icon: <AssignmentRounded fontSize="small" />, badge: 5 },
+  { label: 'Projets', to: '/projects', icon: <FolderOpenRounded fontSize="small" /> },
+  { label: 'Équipe', to: '/teams', icon: <Groups2Rounded fontSize="small" /> },
 ];
 
 const GENERAL_ITEMS = [
-  { label: 'Settings', icon: <SettingsRounded fontSize="small" /> },
-  { label: 'Help', icon: <HelpOutlineRounded fontSize="small" /> },
+  { label: 'Paramètres', icon: <SettingsRounded fontSize="small" /> },
+  { label: 'Aide', icon: <HelpOutlineRounded fontSize="small" /> },
 ];
 
 function SidebarContent({ user, onLogout, onCloseMobile }) {
@@ -78,7 +78,7 @@ function SidebarContent({ user, onLogout, onCloseMobile }) {
           <Typography sx={{ fontWeight: 800, fontSize: '1.1rem', letterSpacing: '-0.02em', color: 'text.primary', lineHeight: 1.1 }}>
             TaskMind
           </Typography>
-          <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 500 }}>Workspace</Typography>
+          <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 500 }}>Espace de travail</Typography>
         </Box>
       </Box>
 
@@ -148,7 +148,7 @@ function SidebarContent({ user, onLogout, onCloseMobile }) {
           variant="caption"
           sx={{ px: 1.5, display: 'block', mt: 3, mb: 1, fontWeight: 700, color: 'text.disabled', letterSpacing: '0.08em', textTransform: 'uppercase' }}
         >
-          General
+          Général
         </Typography>
         <List disablePadding sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
           {GENERAL_ITEMS.map((item) => (
@@ -173,7 +173,7 @@ function SidebarContent({ user, onLogout, onCloseMobile }) {
             }}
           >
             <ListItemIcon sx={{ minWidth: 36, color: 'inherit' }}><LogoutRounded fontSize="small" /></ListItemIcon>
-            <ListItemText primary="Logout" primaryTypographyProps={{ fontWeight: 600, fontSize: '0.875rem', color: 'inherit' }} />
+            <ListItemText primary="Déconnexion" primaryTypographyProps={{ fontWeight: 600, fontSize: '0.875rem', color: 'inherit' }} />
           </ListItemButton>
         </List>
       </Box>
@@ -202,7 +202,7 @@ function SidebarContent({ user, onLogout, onCloseMobile }) {
             {user?.email || 'user@taskmind.app'}
           </Typography>
         </Box>
-        <Tooltip title="Settings">
+        <Tooltip title="Paramètres">
           <SettingsRounded sx={{ fontSize: 16, color: 'text.disabled' }} />
         </Tooltip>
       </Box>
@@ -268,7 +268,7 @@ export function AppLayout() {
             <SearchRounded sx={{ fontSize: 18, color: 'text.disabled' }} />
             <Box
               component="input"
-              placeholder="Search tasks, projects…"
+              placeholder="Rechercher tâches, projets…"
               sx={{
                 border: 'none', outline: 'none',
                 background: 'transparent',
@@ -323,7 +323,7 @@ export function AppLayout() {
             <Avatar src="https://i.pravatar.cc/80?img=5" sx={{ width: 32, height: 32, border: `2px solid ${alpha(theme.palette.primary.main, 0.3)}` }} />
             <Box sx={{ display: { xs: 'none', lg: 'block' } }}>
               <Typography variant="subtitle2" lineHeight={1.2} color="text.primary" fontWeight={700}>{user?.name || 'Mon Compte'}</Typography>
-              <Typography variant="caption" color="text.secondary">{user?.role || 'Admin'}</Typography>
+              <Typography variant="caption" color="text.secondary">{user?.role || 'Administrateur'}</Typography>
             </Box>
           </Stack>
         </Toolbar>

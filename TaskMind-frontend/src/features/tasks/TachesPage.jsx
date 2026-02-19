@@ -20,38 +20,39 @@ import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import dayjs from 'dayjs';
 import { useMemo, useState } from 'react';
 import { getApiError } from '../../api/client';
-import { createProjectApi, deleteProjectApi, listProjectsApi, updateProjectApi } from '../../api/projects.api';
-import { listTeamsApi } from '../../api/teams.api';
+import { listProjectsApi } from '../../api/projects.api';
+import { createTaskApi, deleteTaskApi, listTasksApi, updateTaskApi } from '../../api/tasks.api';
 
-const initialForm = { team_id: '', name: '', description: '', due_date: '' };
+const priorities = ['faible', 'moyenne', 'élevée'];
+const initialForm = { project_id: '', title: '', description: '', due_date: '', priority: 'moyenne', position: 0 };
 
-export function ProjectsPage() {
+export function TasksPage() {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(initialForm);
   const [error, setError] = useState('');
 
+  const tasksQuery = useQuery({ queryKey: ['tasks'], queryFn: listTasksApi });
   const projectsQuery = useQuery({ queryKey: ['projects'], queryFn: listProjectsApi });
-  const teamsQuery = useQuery({ queryKey: ['teams'], queryFn: listTeamsApi });
 
   const saveMutation = useMutation({
     mutationFn: async (payload) => {
       if (editingId) {
-        return updateProjectApi(editingId, payload);
+        return updateTaskApi(editingId, payload);
       }
-      return createProjectApi(payload);
+      return createTaskApi(payload);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
       closeDialog();
     },
     onError: (err) => setError(getApiError(err)),
   });
 
   const deleteMutation = useMutation({
-    mutationFn: deleteProjectApi,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['projects'] }),
+    mutationFn: deleteTaskApi,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['tasks'] }),
   });
 
   function closeDialog() {
@@ -63,19 +64,21 @@ export function ProjectsPage() {
 
   function openCreate() {
     setEditingId(null);
-    const firstTeamId = teamsQuery.data?.[0]?.id ?? '';
-    setForm({ ...initialForm, team_id: firstTeamId });
+    const firstProject = projectsQuery.data?.[0]?.id ?? '';
+    setForm({ ...initialForm, project_id: firstProject });
     setError('');
     setOpen(true);
   }
 
-  function openEdit(project) {
-    setEditingId(project.id);
+  function openEdit(task) {
+    setEditingId(task.id);
     setForm({
-      team_id: project.team_id ?? '',
-      name: project.name ?? '',
-      description: project.description ?? '',
-      due_date: project.due_date ? dayjs(project.due_date).format('YYYY-MM-DD') : '',
+      project_id: task.project_id ?? '',
+      title: task.title ?? '',
+      description: task.description ?? '',
+      due_date: task.due_date ? dayjs(task.due_date).format('YYYY-MM-DD') : '',
+      priority: task.priority ?? 'medium',
+      position: Number(task.position ?? 0),
     });
     setError('');
     setOpen(true);
@@ -91,13 +94,15 @@ export function ProjectsPage() {
     setError('');
 
     const payload = {
-      name: form.name,
+      title: form.title,
       description: form.description || null,
       due_date: form.due_date || null,
+      priority: form.priority || null,
+      position: Number(form.position) || 0,
     };
 
     if (!editingId) {
-      payload.team_id = Number(form.team_id);
+      payload.project_id = Number(form.project_id);
     }
 
     saveMutation.mutate(payload);
@@ -105,16 +110,22 @@ export function ProjectsPage() {
 
   const columns = useMemo(
     () => [
-      { field: 'id', headerName: 'ID', width: 90 },
-      { field: 'name', headerName: 'Name', minWidth: 180, flex: 1 },
-      { field: 'team_id', headerName: 'Team ID', width: 100 },
+      { field: 'id', headerName: 'ID', width: 80 },
+      { field: 'title', headerName: 'Titre', minWidth: 180, flex: 1 },
+      { field: 'project_id', headerName: 'Projet', width: 100 },
+      { field: 'priority', headerName: 'Priorité', width: 110 },
+      {
+        field: 'status',
+        headerName: 'Statut',
+        width: 140,
+        valueGetter: (_, row) => row.status?.name ?? '-',
+      },
       {
         field: 'due_date',
-        headerName: 'Due Date',
+        headerName: 'Échéance',
         width: 130,
         valueGetter: (_, row) => (row.due_date ? dayjs(row.due_date).format('YYYY-MM-DD') : '-'),
       },
-      { field: 'description', headerName: 'Description', minWidth: 220, flex: 1.2 },
       {
         field: 'actions',
         headerName: 'Actions',
@@ -123,7 +134,7 @@ export function ProjectsPage() {
         renderCell: ({ row }) => (
           <Stack direction="row" spacing={1}>
             <Button size="small" variant="outlined" startIcon={<EditRoundedIcon />} onClick={() => openEdit(row)}>
-              Edit
+              Modifier
             </Button>
             <Button
               size="small"
@@ -132,7 +143,7 @@ export function ProjectsPage() {
               startIcon={<DeleteRoundedIcon />}
               onClick={() => deleteMutation.mutate(row.id)}
             >
-              Delete
+              Supprimer
             </Button>
           </Stack>
         ),
@@ -146,20 +157,20 @@ export function ProjectsPage() {
       <Paper sx={{ p: 3 }}>
         <Stack direction="row" justifyContent="space-between" alignItems="center" gap={2}>
           <Box>
-            <Typography variant="h4">Projects</Typography>
-            <Typography color="text.secondary">Track delivery milestones and ownership.</Typography>
+            <Typography variant="h4">Tâches</Typography>
+            <Typography color="text.secondary">Priorisez et surveillez les détails d'exécution.</Typography>
           </Box>
           <Button variant="contained" startIcon={<AddRoundedIcon />} onClick={openCreate}>
-            New Project
+            Nouvelle tâche
           </Button>
         </Stack>
       </Paper>
 
       <Paper sx={{ p: 1 }}>
         <DataGrid
-          rows={projectsQuery.data ?? []}
+          rows={tasksQuery.data ?? []}
           columns={columns}
-          loading={projectsQuery.isLoading}
+          loading={tasksQuery.isLoading}
           disableRowSelectionOnClick
           autoHeight
           pageSizeOptions={[5, 10, 20]}
@@ -168,29 +179,52 @@ export function ProjectsPage() {
       </Paper>
 
       <Dialog open={open} onClose={closeDialog} fullWidth maxWidth="sm">
-        <DialogTitle>{editingId ? 'Edit Project' : 'Create Project'}</DialogTitle>
+        <DialogTitle>{editingId ? 'Modifier la tâche' : 'Créer une tâche'}</DialogTitle>
         <DialogContent>
-          <Stack spacing={2} sx={{ mt: 1 }} component="form" id="project-form" onSubmit={onSubmit}>
+          <Stack spacing={2} sx={{ mt: 1 }} component="form" id="task-form" onSubmit={onSubmit}>
             {error && <Alert severity="error">{error}</Alert>}
             {!editingId && (
               <TextField
                 select
-                name="team_id"
-                label="Team"
-                value={form.team_id}
+                name="project_id"
+                label="Projet"
+                value={form.project_id}
                 onChange={onChange}
                 required
                 fullWidth
               >
-                {(teamsQuery.data ?? []).map((team) => (
-                  <MenuItem key={team.id} value={team.id}>
-                    {team.name}
+                {(projectsQuery.data ?? []).map((project) => (
+                  <MenuItem key={project.id} value={project.id}>
+                    {project.name}
                   </MenuItem>
                 ))}
               </TextField>
             )}
-            <TextField name="name" label="Name" value={form.name} onChange={onChange} required fullWidth />
-            <TextField name="due_date" label="Due date" type="date" value={form.due_date} onChange={onChange} fullWidth InputLabelProps={{ shrink: true }} />
+            <TextField name="title" label="Titre" value={form.title} onChange={onChange} required fullWidth />
+            <TextField select name="priority" label="Priorité" value={form.priority} onChange={onChange} fullWidth>
+              {priorities.map((priority) => (
+                <MenuItem key={priority} value={priority}>
+                  {priority}
+                </MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              name="due_date"
+              label="Date d'échéance"
+              type="date"
+              value={form.due_date}
+              onChange={onChange}
+              InputLabelProps={{ shrink: true }}
+              fullWidth
+            />
+            <TextField
+              name="position"
+              label="Position"
+              type="number"
+              value={form.position}
+              onChange={onChange}
+              fullWidth
+            />
             <TextField
               name="description"
               label="Description"
@@ -203,9 +237,9 @@ export function ProjectsPage() {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeDialog}>Cancel</Button>
-          <Button type="submit" form="project-form" variant="contained" disabled={saveMutation.isPending}>
-            {saveMutation.isPending ? 'Saving...' : 'Save'}
+          <Button onClick={closeDialog}>Annuler</Button>
+          <Button type="submit" form="task-form" variant="contained" disabled={saveMutation.isPending}>
+            {saveMutation.isPending ? 'Enregistrement...' : 'Enregistrer'}
           </Button>
         </DialogActions>
       </Dialog>

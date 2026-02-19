@@ -8,6 +8,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  MenuItem,
   Paper,
   Stack,
   TextField,
@@ -16,38 +17,41 @@ import {
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import dayjs from 'dayjs';
 import { useMemo, useState } from 'react';
-import { createTeamApi, deleteTeamApi, listTeamsApi, updateTeamApi } from '../../api/teams.api';
 import { getApiError } from '../../api/client';
+import { createProjectApi, deleteProjectApi, listProjectsApi, updateProjectApi } from '../../api/projects.api';
+import { listTeamsApi } from '../../api/teams.api';
 
-const initialForm = { name: '', description: '' };
+const initialForm = { team_id: '', name: '', description: '', due_date: '' };
 
-export function TeamsPage() {
+export function ProjectsPage() {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(initialForm);
   const [error, setError] = useState('');
 
+  const projectsQuery = useQuery({ queryKey: ['projects'], queryFn: listProjectsApi });
   const teamsQuery = useQuery({ queryKey: ['teams'], queryFn: listTeamsApi });
 
   const saveMutation = useMutation({
     mutationFn: async (payload) => {
       if (editingId) {
-        return updateTeamApi(editingId, payload);
+        return updateProjectApi(editingId, payload);
       }
-      return createTeamApi(payload);
+      return createProjectApi(payload);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['teams'] });
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
       closeDialog();
     },
     onError: (err) => setError(getApiError(err)),
   });
 
   const deleteMutation = useMutation({
-    mutationFn: deleteTeamApi,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['teams'] }),
+    mutationFn: deleteProjectApi,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['projects'] }),
   });
 
   function closeDialog() {
@@ -59,14 +63,20 @@ export function TeamsPage() {
 
   function openCreate() {
     setEditingId(null);
-    setForm(initialForm);
+    const firstTeamId = teamsQuery.data?.[0]?.id ?? '';
+    setForm({ ...initialForm, team_id: firstTeamId });
     setError('');
     setOpen(true);
   }
 
-  function openEdit(team) {
-    setEditingId(team.id);
-    setForm({ name: team.name ?? '', description: team.description ?? '' });
+  function openEdit(project) {
+    setEditingId(project.id);
+    setForm({
+      team_id: project.team_id ?? '',
+      name: project.name ?? '',
+      description: project.description ?? '',
+      due_date: project.due_date ? dayjs(project.due_date).format('YYYY-MM-DD') : '',
+    });
     setError('');
     setOpen(true);
   }
@@ -79,17 +89,32 @@ export function TeamsPage() {
   function onSubmit(event) {
     event.preventDefault();
     setError('');
-    saveMutation.mutate({
+
+    const payload = {
       name: form.name,
       description: form.description || null,
-    });
+      due_date: form.due_date || null,
+    };
+
+    if (!editingId) {
+      payload.team_id = Number(form.team_id);
+    }
+
+    saveMutation.mutate(payload);
   }
 
   const columns = useMemo(
     () => [
       { field: 'id', headerName: 'ID', width: 90 },
-      { field: 'name', headerName: 'Name', flex: 1, minWidth: 180 },
-      { field: 'description', headerName: 'Description', flex: 1.4, minWidth: 220 },
+      { field: 'name', headerName: 'Nom', minWidth: 180, flex: 1 },
+      { field: 'team_id', headerName: 'Équipe ID', width: 100 },
+      {
+        field: 'due_date',
+        headerName: 'Échéance',
+        width: 130,
+        valueGetter: (_, row) => (row.due_date ? dayjs(row.due_date).format('YYYY-MM-DD') : '-'),
+      },
+      { field: 'description', headerName: 'Description', minWidth: 220, flex: 1.2 },
       {
         field: 'actions',
         headerName: 'Actions',
@@ -98,7 +123,7 @@ export function TeamsPage() {
         renderCell: ({ row }) => (
           <Stack direction="row" spacing={1}>
             <Button size="small" variant="outlined" startIcon={<EditRoundedIcon />} onClick={() => openEdit(row)}>
-              Edit
+              Modifier
             </Button>
             <Button
               size="small"
@@ -107,7 +132,7 @@ export function TeamsPage() {
               startIcon={<DeleteRoundedIcon />}
               onClick={() => deleteMutation.mutate(row.id)}
             >
-              Delete
+              Supprimer
             </Button>
           </Stack>
         ),
@@ -121,20 +146,20 @@ export function TeamsPage() {
       <Paper sx={{ p: 3 }}>
         <Stack direction="row" justifyContent="space-between" alignItems="center" gap={2}>
           <Box>
-            <Typography variant="h4">Teams</Typography>
-            <Typography color="text.secondary">Manage your collaboration groups.</Typography>
+            <Typography variant="h4">Projets</Typography>
+            <Typography color="text.secondary">Suivez les jalons de livraison et les responsabilités.</Typography>
           </Box>
           <Button variant="contained" startIcon={<AddRoundedIcon />} onClick={openCreate}>
-            New Team
+            Nouveau projet
           </Button>
         </Stack>
       </Paper>
 
       <Paper sx={{ p: 1 }}>
         <DataGrid
-          rows={teamsQuery.data ?? []}
+          rows={projectsQuery.data ?? []}
           columns={columns}
-          loading={teamsQuery.isLoading}
+          loading={projectsQuery.isLoading}
           disableRowSelectionOnClick
           autoHeight
           pageSizeOptions={[5, 10, 20]}
@@ -143,11 +168,29 @@ export function TeamsPage() {
       </Paper>
 
       <Dialog open={open} onClose={closeDialog} fullWidth maxWidth="sm">
-        <DialogTitle>{editingId ? 'Edit Team' : 'Create Team'}</DialogTitle>
+        <DialogTitle>{editingId ? 'Modifier le projet' : 'Créer un projet'}</DialogTitle>
         <DialogContent>
-          <Stack spacing={2} sx={{ mt: 1 }} component="form" id="team-form" onSubmit={onSubmit}>
+          <Stack spacing={2} sx={{ mt: 1 }} component="form" id="project-form" onSubmit={onSubmit}>
             {error && <Alert severity="error">{error}</Alert>}
-            <TextField name="name" label="Name" value={form.name} onChange={onChange} required fullWidth />
+            {!editingId && (
+              <TextField
+                select
+                name="team_id"
+                label="Équipe"
+                value={form.team_id}
+                onChange={onChange}
+                required
+                fullWidth
+              >
+                {(teamsQuery.data ?? []).map((team) => (
+                  <MenuItem key={team.id} value={team.id}>
+                    {team.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            )}
+            <TextField name="name" label="Nom" value={form.name} onChange={onChange} required fullWidth />
+            <TextField name="due_date" label="Date d'échéance" type="date" value={form.due_date} onChange={onChange} fullWidth InputLabelProps={{ shrink: true }} />
             <TextField
               name="description"
               label="Description"
@@ -160,9 +203,9 @@ export function TeamsPage() {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeDialog}>Cancel</Button>
-          <Button type="submit" form="team-form" variant="contained" disabled={saveMutation.isPending}>
-            {saveMutation.isPending ? 'Saving...' : 'Save'}
+          <Button onClick={closeDialog}>Annuler</Button>
+          <Button type="submit" form="project-form" variant="contained" disabled={saveMutation.isPending}>
+            {saveMutation.isPending ? 'Enregistrement...' : 'Enregistrer'}
           </Button>
         </DialogActions>
       </Dialog>

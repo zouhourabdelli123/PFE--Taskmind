@@ -26,13 +26,13 @@ import { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { loginApi } from '../../api/auth.api';
 import { getApiError } from '../../api/client';
-import { useAuth } from './AuthContext';
+import { useAuth } from './AuthContexte';
 
 const FEATURES = [
-  'Manage tasks across all your projects',
-  'Real-time collaboration with your team',
-  'Track progress with smart analytics',
-  'Organized sprints and milestones',
+  'Gérez les tâches de tous vos projets',
+  'Collaboration en temps réel avec votre équipe',
+  'Suivez les progrès avec des analyses intelligentes',
+  'Sprints et jalons bien organisés',
 ];
 
 export function LoginPage() {
@@ -127,13 +127,13 @@ export function LoginPage() {
         <Stack spacing={4} sx={{ position: 'relative', zIndex: 1 }}>
           <Box>
             <Typography variant="h2" sx={{ color: 'white', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.2, mb: 2 }}>
-              Manage your work,{' '}
+              Gérez votre travail,{' '}
               <Box component="span" sx={{ color: '#4ade80' }}>
-                smarter.
+                plus intelligemment.
               </Box>
             </Typography>
             <Typography sx={{ color: 'rgba(255,255,255,0.5)', fontSize: '1rem', lineHeight: 1.7 }}>
-              TaskMind brings your team, projects and tasks together in one powerful workspace.
+              TaskMind rassemble votre équipe, vos projets et vos tâches dans un espace de travail puissant.
             </Typography>
           </Box>
 
@@ -158,12 +158,11 @@ export function LoginPage() {
           </Stack>
         </Stack>
 
-        {/* Bottom stats */}
         <Stack direction="row" spacing={4} sx={{ position: 'relative', zIndex: 1 }}>
           {[
-            { value: '10K+', label: 'Active users' },
-            { value: '50K+', label: 'Tasks managed' },
-            { value: '99.9%', label: 'Uptime' },
+            { value: '10K+', label: 'Utilisateurs actifs' },
+            { value: '50K+', label: 'Tâches gérées' },
+            { value: '99.9%', label: 'Disponibilité' },
           ].map((stat) => (
             <Box key={stat.label}>
               <Typography sx={{ color: 'white', fontWeight: 800, fontSize: '1.3rem', letterSpacing: '-0.02em' }}>
@@ -214,10 +213,10 @@ export function LoginPage() {
           {/* Header */}
           <Box sx={{ mb: 4 }}>
             <Typography variant="h4" fontWeight={800} color="text.primary" sx={{ letterSpacing: '-0.025em', mb: 1 }}>
-              Welcome back 👋
+              Bon retour 👋
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              Sign in to continue to your workspace.
+              Connectez-vous pour accéder à votre espace de travail.
             </Typography>
           </Box>
 
@@ -236,7 +235,7 @@ export function LoginPage() {
             {/* Email */}
             <Box>
               <Typography variant="caption" fontWeight={700} color="text.secondary" sx={{ display: 'block', mb: 0.75, ml: 0.5 }}>
-                Email address
+                Adresse e-mail
               </Typography>
               <TextField
                 name="email"
@@ -263,7 +262,7 @@ export function LoginPage() {
             <Box>
               <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 0.75 }}>
                 <Typography variant="caption" fontWeight={700} color="text.secondary" sx={{ ml: 0.5 }}>
-                  Password
+                  Mot de passe
                 </Typography>
                 <Link
                   component={RouterLink}
@@ -273,7 +272,7 @@ export function LoginPage() {
                   underline="hover"
                   fontWeight={700}
                 >
-                  Forgot password?
+                  Mot de passe oublié ?
                 </Link>
               </Stack>
               <TextField
@@ -322,7 +321,7 @@ export function LoginPage() {
               }
               label={
                 <Typography variant="body2" color="text.secondary" fontWeight={500}>
-                  Keep me signed in
+                  Rester connecté
                 </Typography>
               }
             />
@@ -339,16 +338,16 @@ export function LoginPage() {
               {loading ? (
                 <Stack direction="row" spacing={1.5} alignItems="center">
                   <CircularProgress size={18} sx={{ color: 'white' }} />
-                  <span>Signing in…</span>
+                  <span>Connexion en cours…</span>
                 </Stack>
-              ) : 'Sign in to TaskMind'}
+              ) : 'Se connecter à TaskMind'}
             </Button>
           </Stack>
 
           {/* Divider */}
           <Divider sx={{ my: 3 }}>
             <Typography variant="caption" color="text.disabled" fontWeight={600} sx={{ px: 1 }}>
-              OR
+              OU
             </Typography>
           </Divider>
 
@@ -363,9 +362,9 @@ export function LoginPage() {
             }}
           >
             <Typography variant="body2" color="text.secondary">
-              Don't have an account?{' '}
+              Vous n'avez pas de compte ?{' '}
               <Link component={RouterLink} to="/register" fontWeight={700} color="primary.main" underline="hover">
-                Create a free account →
+                Créer un compte gratuit →
               </Link>
             </Typography>
           </Box>
@@ -373,7 +372,7 @@ export function LoginPage() {
 
         {/* Footer */}
         <Typography variant="caption" color="text.disabled" sx={{ position: 'absolute', bottom: 24, textAlign: 'center' }}>
-          © 2025 TaskMind · All rights reserved
+          © 2025 TaskMind · Tous droits réservés
         </Typography>
       </Box>
     </Box>

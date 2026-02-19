@@ -1,11 +1,11 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { AppLayout } from './components/layout/AppLayout';
-import { LoginPage } from './features/auth/LoginPage';
-import { DashboardPage } from './features/dashboard/DashboardPage';
-import { ProjectsPage } from './features/projects/ProjectsPage';
-import { TasksPage } from './features/tasks/TasksPage';
-import { TeamsPage } from './features/teams/TeamsPage';
-import { useAuth } from './features/auth/AuthContext';
+import { AppLayout } from './components/layout/MiseEnPage';
+import { LoginPage } from './features/auth/ConnexionPage';
+import { DashboardPage } from './features/dashboard/TableauDeBordPage';
+import { ProjectsPage } from './features/projects/ProjetsPage';
+import { TasksPage } from './features/tasks/TachesPage';
+import { TeamsPage } from './features/teams/EquipesPage';
+import { useAuth } from './features/auth/AuthContexte';
 
 function Protected({ children }) {
   const { token, loading } = useAuth();
